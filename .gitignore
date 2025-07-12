@@ -3,3 +3,79 @@ node_modules
 /.cache
 /build
 .env
+
+# Node.js
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# next-env.d.ts file, which is created by Next.js in the root directory
+# (though this is a Remix project, it's good practice for JS/TS projects generally if you ever swap)
+.next/ # This is more for Next.js, but harmless to include. Remix uses `build/`
+.vercel/
+
+# Remix/Vite Specific
+build/           # Remix build output directory
+.cache/          # Remix cache directory
+public/build/    # Client-side build output (might be here depending on config)
+.vite/           # Vite's internal cache directory
+dist/            # Common output directory for Vite if not using 'build/'
+
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor/OS Specific
+.idea/             # JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.vscode/           # VS Code settings and launch configurations (excluding common settings)
+*.swp              # Vim swap files
+*.bak              # Backup files
+*.DS_Store         # macOS specific
+Thumbs.db          # Windows specific
+
+#amplify-do-not-edit-begin
+amplify/\#current-cloud-backend
+amplify/.config/local-*
+amplify/logs
+amplify/mock-data
+amplify/mock-api-resources
+amplify/backend/amplify-meta.json
+amplify/backend/.temp
+build/
+dist/
+node_modules/
+aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplifyconfiguration.dart
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig
+.secret-*
+**.sample
+amplify/.config/           # Amplify CLI internal configuration
+amplify/#current-cloud-backend/ # Temporary build directory for Amplify
+amplify/backend/amplify-meta.json # Local meta info (can be regenerated)
+amplify/backend/awscloudformation/ # Local CloudFormation templates (can be regenerated)
+amplify/backend/aws-exports.js  # Generated AWS configuration. THIS IS CRUCIAL TO IGNORE!
+src/aws-exports.js              # Often generated in `src/` depending on setup. Also crucial!
+src/aws-exports.ts              # For TypeScript projects
+amplify/backend/amplify-appsync-transform.conf.json # Configuration file
+amplify/.temp/ # Temporary files
+amplify/generated/          # Generated client code for GraphQL queries/mutations (usually `.graphql` files are committed, but the generated client code isn't always)
+amplify/data/               # Amplify DataStore cache/files
+#amplify-do-not-edit-end

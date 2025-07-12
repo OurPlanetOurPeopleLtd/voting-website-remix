@@ -1,0 +1,21 @@
+{
+  "appName": "ourplanetourpeoplewe",
+  "roleName": "pinpointLambdaRole2165a79c",
+  "cloudformationPolicyName": "cloudformationPolicy2165a79c",
+  "cloudWatchPolicyName": "cloudWatchPolicy2165a79c",
+  "pinpointPolicyName": "pinpointPolicy2165a79c",
+  "authPolicyName": "pinpoint_amplify_2165a79c",
+  "unauthPolicyName": "pinpoint_amplify_2165a79c",
+  "authRoleName": {
+    "Ref": "AuthRoleName"
+  },
+  "unauthRoleName": {
+    "Ref": "UnauthRoleName"
+  },
+  "authRoleArn": {
+    "Fn::GetAtt": [
+      "AuthRole",
+      "Arn"
+    ]
+  }
+}
