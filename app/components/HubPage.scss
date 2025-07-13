@@ -1,0 +1,117 @@
+.frame.hub-page {
+    background-color: transparent;
+    padding-top: 0 !important;
+
+    .frame-content {
+        padding: 0;
+    }
+
+    .content-heading {
+        margin-block: 1rem
+    }
+
+    .hub-card-link {
+        color: var(--tertiary);
+        text-decoration: none;
+        transition: color .3s, background-color .3s;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        background-color: gainsboro;
+        padding: 1rem;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+        &:hover {
+            background-color: var(--tertiary) !important;
+            color: #fff;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        svg {
+            width: 30px;
+            float: right;
+            margin-top: auto;
+            margin-left: auto;
+        }
+    }
+}
+
+.hub-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.hub-frame {
+    position: relative;
+}
+
+.hub-content {
+    background-color: var(--tertiary);
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    padding: 1.5rem;
+
+    ol > li + li {
+        margin-top: .5rem;
+    }
+}
+
+.hub-heading,
+.hub-subheading {
+    font-size: 1.5rem;
+}
+
+.hub-heading {
+    margin-bottom: 1.5rem;
+}
+
+.hub-subheading {
+    margin-block: 1rem;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.hub-text-block {
+    font-size: 1rem;
+}
+
+.hub-panel-right {
+    color: var(--tertiary);
+}
+
+.hub-links-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+    .hub-heading,
+    .hub-subheading {
+        font-size: 1.85rem;
+    }
+
+    .hub-links-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .hub-container {
+        align-items: flex-start;
+        flex-direction: row;
+    }
+    
+    .hub-frame{
+        width: 50%;
+    }
+
+    .hub-panel-right {
+        width: 55%;
+    }
+}

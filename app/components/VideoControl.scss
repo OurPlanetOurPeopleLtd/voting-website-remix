@@ -1,0 +1,31 @@
+mux-player {
+  --controls-backdrop-color: var( #538177);
+  --seek-backward-button: none;
+  --seek-forward-button: none;
+}
+
+#dato-video-player {
+  overflow: hidden;
+  border-radius: 8px;
+
+  + h2 {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Prevent .fullscreen styles on mobile */
+@media (min-width: 768px) {
+  #dato-video-player {
+    aspect-ratio: 16 / 9;
+    max-width: 75%;
+
+    .video-container--with-pdf &,
+    .question-controls &,
+    .hub-panel-right &,
+    .thank-you-content &,
+    .reg-video &,
+    .DialogModal & {
+      max-width: 100%;
+    }
+  }
+}

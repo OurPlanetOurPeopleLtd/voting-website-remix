@@ -1,0 +1,45 @@
+.current-reference {
+  /* Your current styles for the active item */
+  background-color: lightblue; /* Example: highlight the active item */
+}
+
+.other-reference {
+  /* Your current styles for the active item */
+  background-color: snow;
+}
+
+.list-group-item-text {
+  transform-origin: top left;
+}
+
+.list-group-item-text:hover {
+  background-color: lightgray;
+}
+
+.list-group-item-text { /* Or any other suitable selector */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Prevent text from wrapping */
+  width: 100%; /* needed if the element doesn't have a defined width already */
+  text-align: left;
+
+}
+
+.list-group-item.active {
+  color: var(--tertiary) !important;
+  font-weight: 600;
+}
+
+/* animations */
+/* Default transition styles */
+.current-reference,
+.list-group-item-text {
+  transition: all 0.8s ease;
+  padding: 0;
+  height: 40px;
+}
+
+.list-group-item {
+  display: flex;
+  align-items: center;
+}

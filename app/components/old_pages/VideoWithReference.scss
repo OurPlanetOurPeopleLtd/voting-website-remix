@@ -1,0 +1,27 @@
+.video-reference-container {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 968px) {
+  .video-reference-container {
+    gap: 0;
+    flex-direction: row;
+    position: relative;
+  }
+
+  .video-container {
+    width: 66.6666%;
+    padding-right: 1rem;
+  }
+
+  .reference-container {
+    width: 33.3333%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-height: 100%;
+    overflow-y: scroll;
+  }
+}

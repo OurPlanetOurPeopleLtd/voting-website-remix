@@ -79,3 +79,4 @@ amplify/.temp/ # Temporary files
 amplify/generated/          # Generated client code for GraphQL queries/mutations (usually `.graphql` files are committed, but the generated client code isn't always)
 amplify/data/               # Amplify DataStore cache/files
 #amplify-do-not-edit-end
+.vercel

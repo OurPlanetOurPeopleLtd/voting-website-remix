@@ -1,0 +1,69 @@
+.video-card {
+  .video-container {
+
+    @media (min-width: 768px) {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.votingPage {
+  .video-container {
+    width: 80%;
+
+  }
+}
+
+.video-container {
+  width: 100%;
+
+  text-align: center;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    height: 50%;
+    width: 100%;
+  }
+}
+
+/* This element defines the size the iframe will take.
+   In this example we want to have a ratio of 25:14 */
+.aspect-ratio {
+  position: relative;
+  width: 100%;
+  height: 0;
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 56.25%; /* The height of the item will now be 56.25% of the width. */
+
+}
+
+/* Adjust the iframe so it's rendered in the outer-width and outer-height of it's parent */
+.aspect-ratio iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  padding-left: 1%;
+  padding-right: 1%;
+
+}
+
+
+.videoIframe {
+  text-align: center;
+  border: 1px solid #e6e6e6;
+  border-top: 5px solid var(--primary);
+
+  padding: 1.5rem;
+  text-decoration: none;
+
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+
+}

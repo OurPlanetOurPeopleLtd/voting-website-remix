@@ -11,13 +11,19 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@aws-amplify/analytics": "^7.0.84",
     "@remix-run/node": "^2.16.8",
     "@remix-run/react": "^2.16.8",
     "@remix-run/serve": "^2.16.8",
     "@vercel/analytics": "^1.5.0",
+    "aws-amplify": "^6.15.3",
+    "country-code-to-flag-emoji": "^2.0.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-cookie-consent": "^9.0.0",
+    "react-datocms": "^7.2.2",
+    "react-dom": "^18.2.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.16.8",
@@ -33,6 +39,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.5.6",
+    "sass-embedded": "^1.89.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.1.6",
     "vite": "^6.0.0",

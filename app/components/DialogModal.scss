@@ -1,0 +1,30 @@
+.DialogModal {
+    background-color: transparent;
+    border-radius: 8px;
+    width: 85%;
+    padding: 0;
+    margin-inline: auto;
+    border: 0;
+    text-align: right;
+
+    .btn {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.DialogModal__header {
+    display: flex;
+    justify-content: end;
+}
+
+::backdrop {
+    background-color: #123e50;
+    opacity: .75;
+}
+
+@media screen and (min-width: 1220px) {
+    .DialogModal {
+        width: 65%;
+    }
+}

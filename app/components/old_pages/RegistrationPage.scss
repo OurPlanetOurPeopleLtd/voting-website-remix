@@ -1,0 +1,106 @@
+.register-form {
+    > div + div {
+        margin-top: 1rem;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: .5rem;
+    }
+
+    input,
+    textarea {
+        color: var(--tertiary);
+        min-height: 44px;
+        padding-inline: 5px;
+        width: 100%;
+    }
+
+    input,
+    textarea {
+        border-radius: 8px;
+        border: 2px solid var(--tertiary);
+    }
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.form-left, 
+.form-right {
+    flex: 1;
+
+    h2 {
+        margin-bottom: 1.5rem;
+    }
+}
+
+.form-right {
+    border-top: 1px solid #e6e3e3;
+    padding-top: 1rem;
+}
+
+.form-status-message {
+    > div:not(:empty) {
+        border: 1px solid var(--tertiary);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-weight: 600;
+        margin-block: 1rem;
+
+        svg {
+            min-width: 30px;
+        }
+    }
+}
+
+.register-form__privacy {
+    a {
+        color: var(--tertiary);
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+label.register-form__privacy-label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    input[type="checkbox"] {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.reg-helper {
+    margin-top: 1rem;
+}
+
+@media screen and (min-width: 1024px) {
+    .reg-container {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .reg-video {
+        flex: 1 1 100%;
+        max-width: 50%;
+    }
+
+    .form-container {
+        margin-top: 0;
+        padding-top: .5rem;
+    }
+}
