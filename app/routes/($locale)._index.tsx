@@ -15,8 +15,7 @@ import { localStorageVotingIdKey, localStorageWatchedIdKey } from '~/repositorie
 import { Choice } from '~/src/models'; // Adjust path
 import {VideoControl} from "~/components/VideoControl";
 
-// Define supported locales and default
-const SUPPORTED_LOCALES = ['en', 'es', 'fr'];
+
 const DEFAULT_LOCALE = 'en';
 
 // --- Links Function (for route-specific styles only) ---
@@ -25,14 +24,7 @@ import {getDetailTranslation, getNextTranslation, getSummaryTranslation} from "~
 import { DialogModal, DialogModalRef} from "~/components/DialogModal";
 
 import cryingEarth from "../../crying-earth.png";
-/*
-export const links: LinksFunction = () => {
-  return [
-    { rel: 'stylesheet', href: votingPageStyles },
-    // Add other stylesheets specific to this homepage route here
-  ];
-};
-*/
+
 // --- Loader Function ---
 export type LoaderData = {
   votingPageData: TVotingPage;
@@ -46,11 +38,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   if (!locale) {
     locale = DEFAULT_LOCALE;
-    // Optional: redirect to URL with default locale prefix if desired
-    // return redirect(`/${DEFAULT_LOCALE}`);
-  } else if (!SUPPORTED_LOCALES.includes(locale)) {
-    throw new Response('Not Found', { status: 404 });
-  }
+
+  } 
 
   const votingPageData = await getVotingPageJson('Original', locale);
 

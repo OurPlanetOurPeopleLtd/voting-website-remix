@@ -124,115 +124,121 @@ export const DynamicNavList = (props: TDynamicNav) => {
     // Construct slug prefix for internal links
     const gslugPrefix = locale ? `/${locale}/` : "/";
 
-    return (
-        <ul className="flex flex-col lg:flex-row lg:space-x-4"> {/* Main navigation list */}
-            {data && data.map((navItem: NavigationItem, index) => {
-                let slug = navItem.slug;
-                // Adjust slugPrefix handling for internal Remix NavLinks
-                let path = slug ? `${gslugPrefix}${slug}` : gslugPrefix;
-                // Handle double slashes if slug is empty or starts with '/'
-                path = path.replace(/\/\//g, '/');
+    try {
+        return (
+            <ul className="flex flex-col lg:flex-row lg:space-x-4"> {/* Main navigation list */}
+                {data && data.map((navItem: NavigationItem, index) => {
+                    let slug = navItem.slug;
+                    // Adjust slugPrefix handling for internal Remix NavLinks
+                    let path = slug ? `${gslugPrefix}${slug}` : gslugPrefix;
+                    // Handle double slashes if slug is empty or starts with '/'
+                    path = path.replace(/\/\//g, '/');
 
 
-                const key = index + (locale ?? "");
+                    const key = index + (locale ?? "");
 
-                switch (navItem.__typename) {
-                    case ContentType.ExternalLink:
-                        return (
-                            <li key={key}>
-                                <a
-                                    href={navItem.url ?? ""}
-                                    target="_blank" // External links usually open in new tab
-                                    rel="noopener noreferrer"
-                                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition duration-200"
-                                    data-test="full link"
-                                    onClick={onSelect} // Call onSelect for any click
-                                >
-                                    {navItem.title}
-                                </a>
-                            </li>
-                        );
-
-                    case ContentType.PdfAndVideo:
-                        return (
-                            <NavigationDropdown
-                                key={key}
-                                title={navItem.title ?? "_"}
-                                id={`pdf-video-dropdown-${navItem.id}`}
-                                onSelect={onSelect}
-                                onDropdownToggle={setOpenDropdownId}
-                                parentDropdownId={openDropdownId}
-                            >
-                                <li>
-                                    <NavLink
-                                        onClick={onSelect}
-                                        to={path + (navItem.video?.slug ?? "")}
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition duration-200"
-                                    >
-                                        Video format
-                                    </NavLink>
-                                </li>
-                                <li>
+                    switch (navItem.__typename) {
+                        case ContentType.ExternalLink:
+                            return (
+                                <li key={key}>
                                     <a
-                                        href={navItem.pdf?.url ?? ""}
-                                        target="_blank"
+                                        href={navItem.url ?? ""}
+                                        target="_blank" // External links usually open in new tab
                                         rel="noopener noreferrer"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition duration-200"
+                                        className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition duration-200"
+                                        data-test="full link"
+                                        onClick={onSelect} // Call onSelect for any click
                                     >
-                                        PDF format
+                                        {navItem.title}
                                     </a>
                                 </li>
-                            </NavigationDropdown>
-                        );
+                            );
 
-                    case ContentType.NavigationGroup:
-                        return (
-                            <NavigationDropdown
-                                key={key}
-                                title={navItem.title ?? "_"}
-                                id={`nav-group-dropdown-${navItem.id}`}
-                                onSelect={onSelect}
-                                onDropdownToggle={setOpenDropdownId}
-                                parentDropdownId={openDropdownId}
-                            >
-                                {/* Recursive call for nested navigation */}
-                                <DynamicNavList
+                        case ContentType.PdfAndVideo:
+                            return (
+                                <NavigationDropdown
+                                    key={key}
+                                    title={navItem.title ?? "_"}
+                                    id={`pdf-video-dropdown-${navItem.id}`}
                                     onSelect={onSelect}
-                                    itemGroup={navItem.navigationItem}
-                                    locale={locale}
-                                    id={navItem.id ?? "123"}
-                                    onDropdownToggle={setOpenDropdownId} // Pass down the toggle handler
+                                    onDropdownToggle={setOpenDropdownId}
                                     parentDropdownId={openDropdownId}
-                                />
-                            </NavigationDropdown>
-                        );
-
-                    case ContentType.VotingPage:
-                    case ContentType.SpecialPageRecord:
-                    case ContentType.RegistrationPage:
-                    case ContentType.VotingResult:
-                    case ContentType.VideoPage:
-                    case ContentType.BlogPost:
-                    case ContentType.VideoWithPdfs:
-                    default:
-                        // Default case for all other internal links
-                        return (
-                            <li key={key}>
-                                <NavLink
-                                    onClick={onSelect}
-                                    to={path}
-                                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition duration-200"
-                                    // Add active link styling for Remix NavLink
-                                    // className={({ isActive }) =>
-                                    //     `block px-3 py-2 text-gray-700 hover:text-blue-600 transition duration-200 ${isActive ? 'font-bold' : ''}`
-                                    // }
                                 >
-                                    {navItem.title ?? "error"}
-                                </NavLink>
-                            </li>
-                        );
-                }
-            })}
-        </ul>
-    );
+                                    <li>
+                                        <NavLink
+                                            onClick={onSelect}
+                                            to={path + (navItem.video?.slug ?? "")}
+                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition duration-200"
+                                        >
+                                            Video format
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href={navItem.pdf?.url ?? ""}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition duration-200"
+                                        >
+                                            PDF format
+                                        </a>
+                                    </li>
+                                </NavigationDropdown>
+                            );
+
+                        case ContentType.NavigationGroup:
+                            return (
+                                <NavigationDropdown
+                                    key={key}
+                                    title={navItem.title ?? "_"}
+                                    id={`nav-group-dropdown-${navItem.id}`}
+                                    onSelect={onSelect}
+                                    onDropdownToggle={setOpenDropdownId}
+                                    parentDropdownId={openDropdownId}
+                                >
+                                    {/* Recursive call for nested navigation */}
+                                    <DynamicNavList
+                                        onSelect={onSelect}
+                                        itemGroup={navItem.navigationItem}
+                                        locale={locale}
+                                        id={navItem.id ?? "123"}
+                                        onDropdownToggle={setOpenDropdownId} // Pass down the toggle handler
+                                        parentDropdownId={openDropdownId}
+                                    />
+                                </NavigationDropdown>
+                            );
+
+                        case ContentType.VotingPage:
+                        case ContentType.SpecialPageRecord:
+                        case ContentType.RegistrationPage:
+                        case ContentType.VotingResult:
+                        case ContentType.VideoPage:
+                        case ContentType.BlogPost:
+                        case ContentType.VideoWithPdfs:
+                        default:
+                            // Default case for all other internal links
+                            return (
+                                <li key={key}>
+                                    <NavLink
+                                        onClick={onSelect}
+                                        to={path}
+                                        className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition duration-200"
+                                        // Add active link styling for Remix NavLink
+                                        // className={({ isActive }) =>
+                                        //     `block px-3 py-2 text-gray-700 hover:text-blue-600 transition duration-200 ${isActive ? 'font-bold' : ''}`
+                                        // }
+                                    >
+                                        {navItem.title ?? "error"}
+                                    </NavLink>
+                                </li>
+                            );
+                    }
+                })}
+            </ul>
+        );
+    }
+    catch(e:any)
+    {
+        return <div>Something went wrong in the nav list</div>
+    }
 };

@@ -1,138 +1,134 @@
 import React, {useEffect, useState} from "react";
-import { Col, Row } from "react-bootstrap";
+
 import {
     FaFacebook,
     FaTwitter,
-    FaLinkedin,
     FaShareAlt,
     FaWhatsapp,
 } from "react-icons/fa";
 
-import "./SharingControls.scss";
+// REMOVED: import "./SharingControls.scss"; // This SCSS file is no longer needed
+
 import {getUserGuid} from "~/repositories/utils/utilities";
-import {recordUse} from "../utils/analytics";
+import {recordUse} from "~/utils/analytics";
 
 export interface ISharingControls {
-    voted?: boolean;
+    voted?: boolean; // Not used in current JSX
     shareHeading?: string;
-    shareSubHeading?: string;
-    shareButtonText?: string;
-    className?: string;
+    shareSubHeading?: string; // Not used in current JSX
+    shareButtonText?: string; // Not used in current JSX
+    className?: string; // Not used in current JSX
     mainQuestionText?: string;
 }
 
-export const SharingControls = ({shareHeading, shareSubHeading, mainQuestionText}: ISharingControls) => {
-    const [linkAdded, setLinkAdded] = useState(false);
-    const [pageUrl, setPageUrl] = useState( "https://www.ourplanetourpeople.com");
-    
-   
- 
-    
-    const logoUrl = "https://ourplanetourpeople.com/logo.png";
-    useEffect(() => {
-        if (linkAdded)
-            return;
+export const SharingControls = ({shareHeading, mainQuestionText}: ISharingControls) => {
+    // pageUrl could ideally be derived from window.location.origin + window.location.pathname
+    const [pageUrl, setPageUrl] = useState("https://www.ourplanetourpeople.com"); // Consider dynamic URL
 
-        const copyLink = document.getElementById('copy-link') as HTMLLinkElement;
-        if(!copyLink)
-            return;
+    const logoUrl = "https://ourplanetourpeople.com/logo.png"; // Consider dynamic asset import or public URL
 
-        function getCurrentPage():string
-        {
-            const cleanUrl = window.location.origin + window.location.pathname;
-            return encodeURIComponent(cleanUrl);        
-        }
-        
+    // Refactored share functionality to use onClick directly.
+    // This handler attempts native share first, then falls back to clipboard copy.
+    const handleCopyOrNativeShare = (event: React.MouseEvent) => {
+        event.preventDefault(); // Prevent default link behavior for the <a> tag
+        const userGuid = getUserGuid();
 
-        copyLink.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent default link behavior
-
-            // Get the link's href attribute
-            const link = copyLink.href;
-
+        if (navigator.share) {
+            // Use native Web Share API if available
             navigator.share({
-                url:link, 
-                title:mainQuestionText,
+                url: pageUrl,
+                title: mainQuestionText,
                 text: `Please vote! ${logoUrl}`
             })
-
-        });
-        setLinkAdded(true);
-    })
-
-    function record(text: string) {
-        const userGuid = getUserGuid();
-        recordUse({name: "Share_Clicked", attributes: {page: window.location.pathname, userGuid, social:"Custom"}});
-    }
+                .then(() => recordUse({name: "Share_Clicked", attributes: {page: window.location.pathname, userGuid, social:"Native_Share"}}))
+                .catch((error) => console.error('Error sharing natively:', error));
+        } else {
+            // Fallback: Copy to clipboard for browsers that don't support native share
+            navigator.clipboard.writeText(pageUrl)
+                .then(() => {
+                    alert("Link copied to clipboard!"); // Simple user feedback
+                    recordUse({name: "Share_Clicked", attributes: {page: window.location.pathname, userGuid, social:"Copy_Clipboard"}});
+                })
+                .catch((err) => console.error('Failed to copy text: ', err));
+        }
+    };
 
     const openSocialWindow = (url: string) => {
         const left = (window.screen.width - 570) / 2;
         const top = (window.screen.height - 570) / 2;
-        const params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
+        // Adjusted window features for better security (noopener, noreferrer)
+        const params = `menubar=no,toolbar=no,status=no,width=570,height=570,top=${top},left=${left}`;
         window.open(url, "NewWindow", params);
     };
-    
+
     const handleShare = (platform: string) => {
         let url = "";
 
         switch (platform) {
             case "facebook":
-                url = `https://www.facebook.com/sharer.php?u=${pageUrl}`;
-            break;
-
+                url = `https://www.facebook.com/sharer.php?u=${encodeURIComponent(pageUrl)}`;
+                break;
             case "twitter":
-                url = `https://twitter.com/intent/tweet?url=${pageUrl}&text=Check this out!`;
-            break;
-
+                url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('Check this out!')}`;
+                break;
             case "whatsapp":
-                url = `https://api.whatsapp.com/send?text=${pageUrl}`;
-            break;
-
+                url = `https://api.whatsapp.com/send?text=${encodeURIComponent(pageUrl)}`;
+                break;
             default:
-            return;
+                return;
         }
 
         const userGuid = getUserGuid();
         recordUse({name: "Share_Clicked", attributes: {page: window.location.pathname, userGuid, social:platform}});
-        
+
         openSocialWindow(url);
     };
-    
+
     return (
+        // Replaced <Row> elements with `div` and applied Tailwind/custom CSS classes
         <>
-            <Row className={"verticalFrameCentre justify-content-center"}>
+            {/* This div replaces the first <Row> to center the heading */}
+            <div className="flex flex-col items-center justify-center py-4"> {/* py-4 for vertical spacing */}
                 {shareHeading &&
-                    <h1 className="frame__heading">{shareHeading}</h1>
+                    <h1 className="frame__heading text-center">{shareHeading}</h1>
                 }
-            </Row>
+            </div>
 
-            <Row>
-                <Col className={"squashToRow  sharingControls"}>
-                    <div className={"verticalFrameCentre"}>
-                        <div className="sharing-icons__top">
-                            <button type="button">
-                                <FaWhatsapp onClick={(e) => { e.preventDefault(); handleShare("whatsapp")}} style={{ fontSize: '3rem'}}/>
-                                <span className="visually-hidden">Share via WhatsApp</span>
-                            </button>
+            {/* This div replaces the second <Row> to center the sharing controls block */}
+            <div className="flex justify-center w-full">
+                {/* This div replaces the <Col> and holds the main sharing content */}
+                {/* Applied custom `sharingControls` for specific styling and `verticalFrameCentre` for centering its content */}
+                <div className={"sharingControls verticalFrameCentre"}>
+                    {/* This div contains the sharing icons and buttons */}
+                    {/* Tailwind classes: flex container, center items, add gap, allow wrapping on small screens */}
+                    <div className="sharing-icons__top flex items-center justify-center gap-6 md:gap-8 flex-wrap">
+                        {/* WhatsApp Button */}
+                        <button type="button" className="sharing-icon-btn"> {/* Use a common class for styling */}
+                            <FaWhatsapp onClick={(e) => { e.preventDefault(); handleShare("whatsapp")}} style={{ fontSize: '3rem'}}/>
+                            <span className="sr-only">Share via WhatsApp</span> {/* Tailwind for visually-hidden */}
+                        </button>
 
-                            <button type="button">
-                                <FaFacebook onClick={(e) => { e.preventDefault(); handleShare("facebook")}} style={{ fontSize: '3rem'}}/>
-                                <span className="visually-hidden">Share on Facebook</span>
-                            </button>
+                        {/* Facebook Button */}
+                        <button type="button" className="sharing-icon-btn">
+                            <FaFacebook onClick={(e) => { e.preventDefault(); handleShare("facebook")}} style={{ fontSize: '3rem'}}/>
+                            <span className="sr-only">Share on Facebook</span>
+                        </button>
 
-                            <button type="button">
-                                <FaTwitter onClick={(e) => { e.preventDefault(); handleShare("twitter")}} style={{ fontSize: '3rem'}}/>
-                                <span className="visually-hidden">Share on X</span>
-                            </button>
+                        {/* Twitter Button */}
+                        <button type="button" className="sharing-icon-btn">
+                            <FaTwitter onClick={(e) => { e.preventDefault(); handleShare("twitter")}} style={{ fontSize: '3rem'}}/>
+                            <span className="sr-only">Share on X</span>
+                        </button>
 
-                            <a id="copy-link" href={pageUrl}>
-                                <FaShareAlt onClick={() => record("Copy")} />
-                                <span className="visually-hidden">Share with contacts</span>
-                            </a>
-                        </div>
+                        {/* Share Link (Native Share / Copy to Clipboard) */}
+                        {/* Removed id="copy-link" as onClick directly handles functionality */}
+                        <a className="sharing-icon-btn cursor-pointer" onClick={handleCopyOrNativeShare}>
+                            <FaShareAlt style={{ fontSize: '3rem'}}/>
+                            <span className="sr-only">Share with contacts</span>
+                        </a>
                     </div>
-                </Col>
-            </Row>
+                </div>
+            </div>
         </>
-    )
-}
+    );
+};

@@ -9,14 +9,20 @@ import { LoaderFunctionArgs} from "@remix-run/node";
 const DEFAULT_LOCALE = 'en';
 
 
+type ErrorData =
+    {
+        message: string,
+    }
 type LoaderData<TType> = {
-    data: TType;
-    includedDonateButton: boolean;
-    resolvedLocale: string;
+    data?: TType;
+    includedDonateButton?: boolean;
+    resolvedLocale?: string;
+    errorMessage?: string;
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) : Promise<LoaderData<TPage>> => {
-    let locale = params.locale as string | undefined;
+    console.log("in loader func")
+    let locale = params.locale as string | undefined; 
     const slug = params.slug as string | undefined;
     if (!locale) {
         locale = DEFAULT_LOCALE;
@@ -24,28 +30,47 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) : Promise<
     }
     if(!slug)
     {
-        throw new Response('Slug not valid', { status: 404 });
+        return {
+            errorMessage: "Slug invalid"
+        }
     }
 
-    const articleData = await getPageJson(slug, locale); // this is type TPage
-    if(!articleData)
-    {
-        throw new Response('Not Found', { status: 404 });
+    try {
+        const articleData = await getPageJson(slug, locale); // this is type TPage
+
+        if(!articleData)
+        {
+            return {
+                errorMessage: `${slug} Slug Not Found here`
+            }
+        }
+        
+        return {
+            data: articleData,
+            resolvedLocale: locale,
+            includedDonateButton:  slug.includes("donate")
+        };
+    }
+    catch (e :any ){
+        console.log(e)
+        return {
+            
+            errorMessage: e.message
+        }
     }
 
-    return {
-        data: articleData,
-        resolvedLocale: locale,
-        includedDonateButton:  slug.includes("donate")
-    };
 };
 
 
 export const ArticlePage = () => {
 
-    const { data, includedDonateButton } = useLoaderData<LoaderData<TPage>>();
+    console.log("on page")
+    const { data, includedDonateButton, errorMessage } = useLoaderData<LoaderData<TPage>>();
     
-    
+    if(errorMessage)
+    {
+        return <>errorMessage</>
+    }
 
     if (!data)
         return <></>

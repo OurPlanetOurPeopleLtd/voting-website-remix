@@ -9,10 +9,15 @@ import { LoaderFunctionArgs} from "@remix-run/node";
 const DEFAULT_LOCALE = 'en';
 
 
+type ErrorData =
+    {
+        message: string,
+    }
 type LoaderData<TType> = {
-    data: TType;
-    includedDonateButton: boolean;
-    resolvedLocale: string;
+    data?: TType;
+    includedDonateButton?: boolean;
+    resolvedLocale?: string;
+    errorMessage?: string;
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) : Promise<LoaderData<TPage>> => {
@@ -24,28 +29,45 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) : Promise<
     }
     if(!slug)
     {
-        throw new Response('Slug not valid', { status: 404 });
+        return {
+            errorMessage: "Slug invalid"
+        }
     }
 
-    const articleData = await getPageJson(slug, locale); // this is type TPage
-    if(!articleData)
-    {
-        throw new Response('Not Found', { status: 404 });
+    try {
+        const articleData = await getPageJson(slug, locale); // this is type TPage
+
+        if(!articleData)
+        {
+            return {
+                errorMessage: `${slug} Slug Not Found`
+            }
+        }
+
+        return {
+            data: articleData,
+            resolvedLocale: locale,
+            includedDonateButton:  slug.includes("donate")
+        };
+    }
+    catch (e :any ){
+        return {
+
+            errorMessage: e.message
+        }
     }
 
-    return {
-        data: articleData,
-        resolvedLocale: locale,
-        includedDonateButton:  slug.includes("donate")
-    };
 };
 
 
 export const ArticlePage = () => {
 
-    const { data, includedDonateButton } = useLoaderData<LoaderData<TPage>>();
-    
-    
+    const { data, includedDonateButton, errorMessage } = useLoaderData<LoaderData<TPage>>();
+
+    if(errorMessage)
+    {
+        return <>errorMessage</>
+    }
 
     if (!data)
         return <></>

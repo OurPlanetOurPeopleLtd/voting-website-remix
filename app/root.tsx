@@ -50,9 +50,9 @@ export const links: LinksFunction = () => {
 
 export function links() {
     return [
-        { rel: 'stylesheet', href: '~/styles/BootstrapBaseline.css' },
-        { rel: 'stylesheet', href: '~/styles/CustomComponentStyles.css' },
-        { rel: 'stylesheet', href: '~/components/DynamicHeader.css' },
+     /*   { rel: 'stylesheet', href: '~/components/BootstrapBaseline.css' },
+        { rel: 'stylesheet', href: '~/components/CustomComponentStyles.css' },
+        { rel: 'stylesheet', href: '~/components/DynamicHeader.css' },*/
         // ... (any other stylesheets you want loaded globally)
     ];
 }
