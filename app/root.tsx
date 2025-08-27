@@ -36,6 +36,8 @@ import "~/components/old_pages/VotingPage.scss";
 import "~/components/old_pages/Page.scss";
 import "~/components/Layout.scss";
 import "~/components/CopiedStyles.css";
+import {getNavigationJson} from "~/repositories/Navigation/request";
+import {NavigationItem} from "~/repositories/Navigation/types";
 
 // --- Remix Link and Meta Functions ---
 // These define the <link> and <meta> tags for the entire document
@@ -79,6 +81,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export type RootLoaderData = {
     locale: string;
     cookieText: ReturnType<typeof getCookieBannerText>;
+    footerData: NavigationItem[],
+    headerNavData: NavigationItem[],
     // Add any other data needed by DynamicNavList or DynamicFooter here
     // For example: headerNavData: HeaderNavData, footerData: FooterData
     title?: string; // Initial title for root, can be overridden by child routes
@@ -98,14 +102,16 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     const cookieBannerText = getCookieBannerText(locale);
 
     // You might also fetch data for DynamicNavList and DynamicFooter here
-    // const headerNavData = await fetchHeaderNavData(locale);
-    // const footerData = await fetchFooterData(locale);
+     const headerComponentId = "UW2LLARmS3Oryu_9BT0IBQ"; //todo this is a bit rubbish
+     const footerComponentId = "QR1NY2zlRK-luRZZkbfB1w";
+     const headerNavData =  await getNavigationJson(headerComponentId, locale ?? "en");(locale);
+     const footerData = await getNavigationJson(footerComponentId, locale ?? "en");(locale)
 
     return json<RootLoaderData>({
         locale,
         cookieText: cookieBannerText,
-        // headerNavData,
-        // footerData,
+         headerNavData: headerNavData,
+         footerData: footerData,
         title: "Home", // Default title for the entire app, can be overridden by specific routes
     });
 };
@@ -113,7 +119,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 // --- Root Component ---
 // This is your main App component that renders the layout
 export default function App() {
-    const { locale, cookieText, title: rootTitle } = useLoaderData<RootLoaderData>();
+    const { locale, cookieText, title: rootTitle, headerNavData, footerData } = useLoaderData<RootLoaderData>();
     const location = useLocation(); // Get current URL path
     const navigate = useNavigate(); // For programmatic navigation (e.g., locale change)
 
@@ -210,7 +216,7 @@ export default function App() {
                 >
                     <nav
                         className="lg:flex-grow lg:flex lg:justify-end lg:items-center mt-4 lg:mt-0"> {/* Replaces Nav */}
-                        <DynamicNavList id={headerComponentId} locale={locale} onSelect={() => setExpanded(false)}/>
+                        <DynamicNavList id={headerComponentId} locale={locale} itemGroup={headerNavData} onSelect={() => setExpanded(false)}/>
 
                         <div className="lg:ml-4 mt-4 lg:mt-0"> {/* Replaces main-nav__language */}
                             <FlagSelect currentLocale={locale ?? defaultLanguage}/>
@@ -268,8 +274,7 @@ export default function App() {
         ) : null}
 
         {/* Dynamic Footer */}
-        <DynamicFooter id={footerComponentId} locale={locale}/>
-        <div>HELLO WORLD 2</div>
+        <DynamicFooter id={footerComponentId} locale={locale}  itemGroup={footerData}/> 
         {/* Remix Core Scripts */}
         <ScrollRestoration/>
         <Scripts/>

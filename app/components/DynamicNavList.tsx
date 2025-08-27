@@ -2,9 +2,11 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { ContentType, NavigationItem } from "~/repositories/Navigation/types";
-import { getNavigationJson } from "~/repositories/Navigation/request"; // Using the alias!
-import { NavLink } from "@remix-run/react"; // Use Remix's NavLink
-import "./MegaMenu.scss"; // Keep if you have custom styles that aren't easily done in Tailwind
+
+import {NavLink, useLoaderData} from "@remix-run/react"; // Use Remix's NavLink
+import "./MegaMenu.scss";
+
+
 
 export type TDynamicNav = {
     id: string;
@@ -94,32 +96,31 @@ const NavigationDropdown: React.FC<{
     );
 };
 
-
+const getExtraPath = (type:ContentType):string =>
+{
+    if(type === ContentType.VideoWithPdfs)
+    {
+        return "info";
+    }
+    else if(type === ContentType.BlogPost)
+    {
+        return "article";   
+    }
+    return "";
+}
 export const DynamicNavList = (props: TDynamicNav) => {
     const { id, itemGroup, locale, onSelect } = props;
 
+    
+    
     // Use a state for the currently open dropdown in this level
     // This helps ensure only one top-level dropdown is open at a time for mobile
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
-    const fetchData = useCallback(async () => {
-        const dataFetched = await getNavigationJson(id, locale ?? "en");
-        setData(dataFetched);
-    }, [id, locale]);
 
     const [data, setData] = useState<NavigationItem[]>(itemGroup ?? []);
 
-    // Initial fetch if data is not provided via props
-    useEffect(() => {
-        if (!data.length) {
-            fetchData().catch(console.error);
-        }
-    }, [fetchData, data.length]); // Add data.length to dependency array
-
-    // Re-fetch when locale changes
-    useEffect(() => {
-        fetchData().catch(console.error);
-    }, [locale, fetchData]);
+   
 
     // Construct slug prefix for internal links
     const gslugPrefix = locale ? `/${locale}/` : "/";
@@ -130,10 +131,11 @@ export const DynamicNavList = (props: TDynamicNav) => {
                 {data && data.map((navItem: NavigationItem, index) => {
                     let slug = navItem.slug;
                     // Adjust slugPrefix handling for internal Remix NavLinks
-                    let path = slug ? `${gslugPrefix}${slug}` : gslugPrefix;
+                    const pathType = getExtraPath(navItem.__typename);
+                    let path = slug ? `${gslugPrefix}${pathType}/${slug}` : gslugPrefix;
                     // Handle double slashes if slug is empty or starts with '/'
                     path = path.replace(/\/\//g, '/');
-
+                    
 
                     const key = index + (locale ?? "");
 
@@ -167,7 +169,7 @@ export const DynamicNavList = (props: TDynamicNav) => {
                                     <li>
                                         <NavLink
                                             onClick={onSelect}
-                                            to={path + (navItem.video?.slug ?? "")}
+                                            to={path +(navItem.video?.slug ?? "")}
                                             className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition duration-200"
                                         >
                                             Video format
@@ -207,13 +209,12 @@ export const DynamicNavList = (props: TDynamicNav) => {
                                     />
                                 </NavigationDropdown>
                             );
-
+                
                         case ContentType.VotingPage:
                         case ContentType.SpecialPageRecord:
                         case ContentType.RegistrationPage:
                         case ContentType.VotingResult:
-                        case ContentType.VideoPage:
-                        case ContentType.BlogPost:
+                        case ContentType.VideoPage:                  
                         case ContentType.VideoWithPdfs:
                         default:
                             // Default case for all other internal links

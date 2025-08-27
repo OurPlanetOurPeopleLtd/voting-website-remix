@@ -1,34 +1,23 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useState} from "react";
 import {DataStore} from "@aws-amplify/datastore";
-import {User} from "../models";
+import {User} from "~/src/models";
 import {v4 as generateGuid} from "uuid";
-import {recordUse} from "../utils/analytics";
+import {recordUse} from "~/utils/analytics";
 import {VideoControl} from "~/components/VideoControl";
 
-import {getRegistrationPage} from "~/repositories/Registration/request";
-import {TRegistrationPage, TRegistrationProps} from "~/repositories/Registration/model";
+import { TRegistrationProps} from "~/repositories/Registration/model";
 import {localStorageVotingIdKey} from "~/repositories/utils/utilities";
 import { getTranslation } from "~/repositories/utils/extraTranslations";
 
 import "./RegistrationPage.scss";
 
-export const RegistrationPage = ({locale}: TRegistrationProps) => {
+export const RegistrationPage = ({locale, data}: TRegistrationProps) => {
     const [emailExistsError, setEmailExists] = useState(false);
     const [thankYouForRegister, setThankYouRegister] = useState(false);
     type TDeregisterState =  "showSuccess" | "showFail" | "hide";
     const [showDeregisterMessage, setDeregisterMessage] = useState<TDeregisterState>("hide");
 
-    const fetchData = useCallback(async () => {     
-        let dataFetched = await getRegistrationPage("registration",locale);
-        setData(dataFetched);
-    }, [locale])
-    
-    useEffect(() => {
-        fetchData().catch(console.error);
-    }, [fetchData]);
-
-    const [data, setData] = useState<TRegistrationPage | undefined>(undefined);
-        
+      
     const Deregister = async (email:string) => {
         const existingUser = await DataStore.query(User, (v) => v.and(v => [v.email?.eq(deRegEmail)]))
         const aExistingUser = existingUser.shift();

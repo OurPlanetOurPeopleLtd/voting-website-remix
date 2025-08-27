@@ -21,4 +21,5 @@ export type TRegistrationPage =
     }
 export type TRegistrationProps = {
     locale: string
+        data:TRegistrationPage
 }

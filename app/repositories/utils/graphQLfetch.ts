@@ -73,7 +73,7 @@ export async function getStaticOrFetch<T>(
     slug: string,
     staticData: boolean = false
 ): Promise<T> {
-    if (staticData) {
+   /* if (staticData) {
         
         const fileName = `${fileNamePrefix}_${locale}_${slug}.json`;
         const filePath = `/data/${fileName}`;
@@ -85,7 +85,7 @@ export async function getStaticOrFetch<T>(
         } else {
             console.log('\x1b[33m%s\x1b[0m',`Falling back to API for ${fileName}:`, staticResult.error);
         }
-    }
+    }*/
 
     return apiPromise;
 }

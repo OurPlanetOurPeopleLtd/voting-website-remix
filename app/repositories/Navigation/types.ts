@@ -55,7 +55,12 @@ export interface TQuestionBlock {
     voteAgainstText: string,
     textBelowVoting: string,
 }
-
+export interface FooterItem
+{
+    title:string,
+    link: string,
+    itemGroup?: NavigationItem[]
+}
 export interface NavigationItem extends NavigationGroup {
     mainVideo: TVideoThumbnail | undefined;
     cardTitle: string;
